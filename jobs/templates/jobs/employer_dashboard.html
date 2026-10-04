@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Кабинет работодателя
+{% endblock %}
+
+
+{% block content %}
+
+    <section>
+
+        <div class="section-header">
+
+            <h1 class="page-title">
+                Кабинет работодателя
+            </h1>
+
+            <div class="hero-actions">
+
+                <a
+                    href="{% url 'company_create' %}"
+                    class="button button-secondary"
+                >
+                    Добавить компанию
+                </a>
+
+                <a
+                    href="{% url 'vacancy_create' %}"
+                    class="button button-primary"
+                >
+                    Создать вакансию
+                </a>
+
+                <a
+                    href="{% url 'employer_applications' %}"
+                    class="button button-secondary"
+                >
+                    Отклики на вакансии
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <h2>
+            Мои компании
+        </h2>
+
+        {% for company in companies %}
+
+            <div class="card">
+
+                <strong>
+                    {{ company.name }}
+                </strong>
+
+                {% if company.city %}
+                    — {{ company.city }}
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <p>
+                У вас пока нет компаний.
+            </p>
+
+        {% endfor %}
+
+
+        <h2>
+            Мои вакансии
+        </h2>
+
+        <div class="vacancy-list">
+
+            {% for vacancy in vacancies %}
+
+                <article class="vacancy-card">
+
+                    <h3>
+                        {{ vacancy.title }}
+                    </h3>
+
+                    <p>
+                        {{ vacancy.company.name }}
+                    </p>
+
+                    <p>
+                        {% if vacancy.is_active %}
+                            Активна
+                        {% else %}
+                            Неактивна
+                        {% endif %}
+                    </p>
+
+                    <div class="hero-actions">
+
+                        <a
+                            href="{% url 'vacancy_detail' vacancy.pk %}"
+                            class="button button-secondary"
+                        >
+                            Просмотреть
+                        </a>
+
+                        <a
+                            href="{% url 'vacancy_update' vacancy.pk %}"
+                            class="button button-secondary"
+                        >
+                            Редактировать
+                        </a>
+
+                        <a
+                            href="{% url 'vacancy_delete' vacancy.pk %}"
+                            class="button button-secondary"
+                        >
+                            Удалить
+                        </a>
+
+                    </div>
+
+                </article>
+
+            {% empty %}
+
+                <p>
+                    Вы ещё не создали ни одной вакансии.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+{% endblock %}

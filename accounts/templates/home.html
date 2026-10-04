@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Главная — Платформа вакансий
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1 class="page-title">
+                Найдите работу или сотрудника
+            </h1>
+
+            <p class="hero-description">
+                Платформа для поиска вакансий,
+                размещения резюме и взаимодействия
+                между работодателями и соискателями.
+            </p>
+
+            <div class="hero-actions">
+
+                <a
+                    href="{% url 'vacancy_list' %}"
+                    class="button button-primary"
+                >
+                    Смотреть вакансии
+                </a>
+
+                {% if not user.is_authenticated %}
+
+                    <a
+                        href="{% url 'register' %}"
+                        class="button button-secondary"
+                    >
+                        Создать аккаунт
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {% if user.is_authenticated %}
+
+        <section class="dashboard-preview">
+
+            <div class="section-header">
+                <h2>
+                    Личный кабинет
+                </h2>
+            </div>
+
+            <div class="card">
+
+                <p>
+                    <strong>Пользователь:</strong>
+                    {{ user.username }}
+                </p>
+
+                {% if user.role %}
+
+                    <p>
+                        <strong>Роль:</strong>
+                        {{ user.get_role_display }}
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+    {% endif %}
+
+{% endblock %}

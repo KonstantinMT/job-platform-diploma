@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    {{ vacancy.title }}
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="vacancy-detail">
+
+        <div class="card">
+
+            <h1 class="page-title">
+                {{ vacancy.title }}
+            </h1>
+
+            <h2>
+                {{ vacancy.company.name }}
+            </h2>
+
+            <p>
+                <strong>Город:</strong>
+                {{ vacancy.city }}
+            </p>
+
+            <p>
+                <strong>Опыт:</strong>
+                {{ vacancy.get_experience_display }}
+            </p>
+
+            <p>
+                <strong>Тип занятости:</strong>
+                {{ vacancy.get_employment_type_display }}
+            </p>
+
+            <p>
+                <strong>Зарплата:</strong>
+
+                {% if vacancy.salary_from %}
+                    от {{ vacancy.salary_from }}
+                {% endif %}
+
+                {% if vacancy.salary_to %}
+                    до {{ vacancy.salary_to }}
+                {% endif %}
+
+                {% if not vacancy.salary_from and not vacancy.salary_to %}
+                    не указана
+                {% endif %}
+            </p>
+
+            <h3>
+                Описание
+            </h3>
+
+            <p>
+                {{ vacancy.description }}
+            </p>
+
+            <h3>
+                Навыки
+            </h3>
+
+            <div class="skills-list">
+
+                {% for skill in vacancy.skills.all %}
+
+                    <span class="skill-badge">
+                        {{ skill.name }}
+                    </span>
+
+                {% empty %}
+
+                    <span>
+                        Навыки не указаны
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+
+            {% if user.is_authenticated and user.role == 'candidate' %}
+
+                <div class="hero-actions">
+
+                    <a
+                        href="{% url 'application_create' vacancy.pk %}"
+                        class="button button-primary"
+                    >
+                        Откликнуться
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+        <p>
+            <a
+                href="{% url 'vacancy_list' %}"
+                class="button button-secondary"
+            >
+                Назад к вакансиям
+            </a>
+        </p>
+
+    </section>
+
+{% endblock %}

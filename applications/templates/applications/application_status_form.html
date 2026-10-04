@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Изменение статуса
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="auth-section">
+
+        <div class="form-card">
+
+            <h1>
+                Изменение статуса отклика
+            </h1>
+
+            <p>
+                <strong>Вакансия:</strong>
+                {{ application.vacancy.title }}
+            </p>
+
+            <p>
+                <strong>Соискатель:</strong>
+                {{ application.candidate.user.username }}
+            </p>
+
+            <form
+                method="post"
+                class="site-form"
+            >
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button
+                    type="submit"
+                    class="button button-primary button-full"
+                >
+                    Сохранить статус
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+{% endblock %}

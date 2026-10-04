@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Отклики на вакансии
+{% endblock %}
+
+
+{% block content %}
+
+    <section>
+
+        <div class="section-header">
+
+            <h1 class="page-title">
+                Отклики на мои вакансии
+            </h1>
+
+        </div>
+
+
+        <div class="vacancy-list">
+
+            {% for application in applications %}
+
+                <article class="vacancy-card">
+
+                    <h2>
+                        {{ application.vacancy.title }}
+                    </h2>
+
+                    <p>
+                        <strong>Соискатель:</strong>
+                        {{ application.candidate.user.username }}
+                    </p>
+
+                    <p>
+                        <strong>Резюме:</strong>
+                        {{ application.resume.title }}
+                    </p>
+
+                    <p>
+                        <strong>Статус:</strong>
+                        {{ application.get_status_display }}
+                    </p>
+
+                    {% if application.cover_letter %}
+
+                        <p>
+                            <strong>Сопроводительное письмо:</strong>
+                        </p>
+
+                        <p>
+                            {{ application.cover_letter }}
+                        </p>
+
+                    {% endif %}
+
+                    <p>
+                        <strong>Дата отклика:</strong>
+                        {{ application.created_at }}
+                    </p>
+
+                    <a
+                        href="{% url 'application_status_update' application.pk %}"
+                        class="button button-primary"
+                    >
+                        Изменить статус
+                    </a>
+
+                </article>
+
+            {% empty %}
+
+                <p>
+                    На ваши вакансии пока нет откликов.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </section>
+
+{% endblock %}

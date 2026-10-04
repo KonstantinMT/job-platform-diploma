@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Удаление вакансии
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="auth-section">
+
+        <div class="form-card">
+
+            <h1>
+                Удалить вакансию?
+            </h1>
+
+            <p>
+                Вы действительно хотите удалить
+                вакансию
+                <strong>{{ vacancy.title }}</strong>?
+            </p>
+
+            <form method="post">
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="button button-primary"
+                >
+                    Да, удалить
+                </button>
+
+                <a
+                    href="{% url 'employer_dashboard' %}"
+                    class="button button-secondary"
+                >
+                    Отмена
+                </a>
+
+            </form>
+
+        </div>
+
+    </section>
+
+{% endblock %}

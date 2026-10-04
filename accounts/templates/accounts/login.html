@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Вход
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="auth-section">
+
+        <div class="form-card">
+
+            <div class="section-header">
+
+                <h1>
+                    Вход
+                </h1>
+
+                <p>
+                    Войдите в свой аккаунт.
+                </p>
+
+            </div>
+
+
+            <form
+                method="post"
+                class="site-form"
+            >
+
+                {% csrf_token %}
+
+                {{ form.as_p }}
+
+                <button
+                    type="submit"
+                    class="button button-primary button-full"
+                >
+                    Войти
+                </button>
+
+            </form>
+
+
+            <p class="form-footer">
+
+                Нет аккаунта?
+
+                <a href="{% url 'register' %}">
+                    Зарегистрироваться
+                </a>
+
+            </p>
+
+        </div>
+
+    </section>
+
+{% endblock %}

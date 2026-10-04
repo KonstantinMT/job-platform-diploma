@@ -1,0 +1,358 @@
+{% extends 'base.html' %}
+
+
+{% block title %}
+    Вакансии
+{% endblock %}
+
+
+{% block content %}
+
+    <section class="vacancies-section">
+
+        <div class="section-header">
+
+            <h1 class="page-title">
+                Вакансии
+            </h1>
+
+            <p>
+                Найдите подходящую вакансию
+                с помощью поиска и фильтров.
+            </p>
+
+        </div>
+
+
+        <div class="vacancies-layout">
+
+            <aside class="filters-panel">
+
+                <form
+                    method="get"
+                    class="filters-form"
+                >
+
+                    <div class="form-group">
+
+                        <label for="search">
+                            Поиск
+                        </label>
+
+                        <input
+                            id="search"
+                            type="text"
+                            name="q"
+                            value="{{ request.GET.q }}"
+                            placeholder="Название или компания"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="city">
+                            Город
+                        </label>
+
+                        <input
+                            id="city"
+                            type="text"
+                            name="city"
+                            value="{{ request.GET.city }}"
+                            placeholder="Например, Берлин"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="employment_type">
+                            Тип занятости
+                        </label>
+
+                        <select
+                            id="employment_type"
+                            name="employment_type"
+                        >
+
+                            <option value="">
+                                Все
+                            </option>
+
+                            {% for value, label in employment_types %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if request.GET.employment_type == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="experience">
+                            Опыт работы
+                        </label>
+
+                        <select
+                            id="experience"
+                            name="experience"
+                        >
+
+                            <option value="">
+                                Любой
+                            </option>
+
+                            {% for value, label in experience_levels %}
+
+                                <option
+                                    value="{{ value }}"
+                                    {% if request.GET.experience == value %}
+                                        selected
+                                    {% endif %}
+                                >
+                                    {{ label }}
+                                </option>
+
+                            {% endfor %}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="salary_min">
+                            Минимальная зарплата
+                        </label>
+
+                        <input
+                            id="salary_min"
+                            type="number"
+                            name="salary_min"
+                            min="0"
+                            value="{{ request.GET.salary_min }}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="ordering">
+                            Сортировка
+                        </label>
+
+                        <select
+                            id="ordering"
+                            name="ordering"
+                        >
+
+                            <option value="-created_at">
+                                Сначала новые
+                            </option>
+
+                            <option value="created_at">
+                                Сначала старые
+                            </option>
+
+                            <option value="salary_from">
+                                Зарплата: по возрастанию
+                            </option>
+
+                            <option value="-salary_from">
+                                Зарплата: по убыванию
+                            </option>
+
+                            <option value="title">
+                                По названию
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="filter-actions">
+
+                        <button
+                            type="submit"
+                            class="button button-primary"
+                        >
+                            Найти
+                        </button>
+
+                        <a
+                            href="{% url 'vacancy_list' %}"
+                            class="button button-secondary"
+                        >
+                            Сбросить
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </aside>
+
+
+            <div class="vacancy-list">
+
+                {% for vacancy in page_obj %}
+
+                    <article class="vacancy-card">
+
+                        <div class="vacancy-card-header">
+
+                            <h2 class="vacancy-title">
+                                <a href="{% url 'vacancy_detail' vacancy.pk %}">
+                                    {{ vacancy.title }}
+                                </a>
+                            </h2>
+
+                            <p class="vacancy-company">
+                                {{ vacancy.company.name }}
+                            </p>
+
+                        </div>
+
+
+                        <div class="vacancy-info">
+
+                            <span>
+                                {{ vacancy.city }}
+                            </span>
+
+                            <span>
+                                {{ vacancy.get_experience_display }}
+                            </span>
+
+                            <span>
+                                {{ vacancy.get_employment_type_display }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="vacancy-salary">
+
+                            {% if vacancy.salary_from or vacancy.salary_to %}
+
+                                Зарплата:
+
+                                {% if vacancy.salary_from %}
+                                    от {{ vacancy.salary_from }}
+                                {% endif %}
+
+                                {% if vacancy.salary_to %}
+                                    до {{ vacancy.salary_to }}
+                                {% endif %}
+
+                            {% else %}
+
+                                Зарплата не указана
+
+                            {% endif %}
+
+                        </div>
+
+
+                        <p class="vacancy-description">
+                            {{ vacancy.description }}
+                        </p>
+
+
+                        <div class="skills-list">
+
+                            {% for skill in vacancy.skills.all %}
+
+                                <span class="skill-badge">
+                                    {{ skill.name }}
+                                </span>
+
+                            {% empty %}
+
+                                <span class="text-muted">
+                                    Навыки не указаны
+                                </span>
+
+                            {% endfor %}
+
+                        </div>
+
+                    </article>
+
+                {% empty %}
+
+                    <div class="empty-state">
+
+                        <h2>
+                            Вакансии не найдены
+                        </h2>
+
+                        <p>
+                            Попробуйте изменить параметры поиска.
+                        </p>
+
+                    </div>
+
+                {% endfor %}
+
+
+                {% if page_obj.paginator.num_pages > 1 %}
+
+                    <nav class="pagination">
+
+                        {% if page_obj.has_previous %}
+
+                            <a
+                                href="?page={{ page_obj.previous_page_number }}"
+                                class="pagination-link"
+                            >
+                                Назад
+                            </a>
+
+                        {% endif %}
+
+
+                        <span class="pagination-current">
+                            Страница {{ page_obj.number }}
+                            из {{ page_obj.paginator.num_pages }}
+                        </span>
+
+
+                        {% if page_obj.has_next %}
+
+                            <a
+                                href="?page={{ page_obj.next_page_number }}"
+                                class="pagination-link"
+                            >
+                                Далее
+                            </a>
+
+                        {% endif %}
+
+                    </nav>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </section>
+
+{% endblock %}
